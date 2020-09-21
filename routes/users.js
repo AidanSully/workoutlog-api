@@ -65,9 +65,16 @@ router.post("/login", (req, res) => {
 			return res.status(400).json({ emailnotfound: "Email not found" });
 		}
 		// TODO: Check password with bcrypt
-		else {
-			return res.status(400).json({ emailfound: "Email is present" });
-		}
+		bcrypt.compare(password, user.password).then((res) => {
+			if (res) {
+				return console.log("passwords match");
+			} else {
+				return console.log("passwords do not match");
+			}
+		})
+		// else {
+		// 	return res.status(400).json({ emailfound: "Email is present" });
+		// }
 	});
 });
 
