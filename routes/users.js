@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const keys = require('../config/keys')
 
 // Load input validation
 const validateRegisterInput = require("../validation/register.validation");
@@ -64,17 +65,32 @@ router.post("/login", (req, res) => {
 		if (!user) {
 			return res.status(400).json({ emailnotfound: "Email not found" });
 		}
-		// TODO: Check password with bcrypt
-		bcrypt.compare(password, user.password).then((res) => {
-			if (res) {
-				return console.log("passwords match");
+		// Check password
+		bcrypt.compare(password, user.password).then((result) => {
+			if (result) {
+				// Create payload
+				const payload = {
+					id: user.id,
+					name: user.name
+				};
+				// Sign token
+				jwt.sign(
+					payload,
+					keys.secretOrKey,
+					{
+						expiresIn: 31556926 // 1 year in seconds
+					},
+					(err, token) => {
+						res.json({
+							success: true,
+							token: "Bearer " + token
+						});
+					}
+				)
 			} else {
-				return console.log("passwords do not match");
+				return res.status(400).json({ passwordincorrect: "Password incorrect" });
 			}
 		})
-		// else {
-		// 	return res.status(400).json({ emailfound: "Email is present" });
-		// }
 	});
 });
 
