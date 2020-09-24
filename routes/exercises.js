@@ -8,7 +8,6 @@ const validateExercise = require('../validation/exercise.validation');
 
 // @route POST api/exercises/add
 // @desc add exercise to table
-// @access Public
 router.post("/exercises/add", (req, res) => {
     // Form validation
     const { errors, isValid } = validateExercise(req.body);

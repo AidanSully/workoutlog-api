@@ -14,8 +14,10 @@ module.exports = function validateExercise(data) {
     let found = false;
     // Name check
     for (let i = 0; i < validExercises.length; i++) {
-        if (validExercises[i] === data.name)
+        if (validExercises[i] === data.name) {
             found = true;
+            break ;
+        }
     }
     if (!found) {
         errors.name = "Exercise name is invalid";
